@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "119178521093",
+    "firebase_url": "https://project-433490814711947687-default-rtdb.firebaseio.com",
+    "project_id": "project-433490814711947687",
+    "storage_bucket": "project-433490814711947687.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119178521093:android:fbd99f93f0e931ab9e4a6c",
+        "android_client_info": {
+          "package_name": "com.example.cloudlab_20180413_20180375_20180341_20180247"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119178521093-tiofi5jh0863536lairnr615a8fejl15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrLYP-evD_3Wc-Uq9Xq5QbplOFFr05QEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119178521093-tiofi5jh0863536lairnr615a8fejl15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
