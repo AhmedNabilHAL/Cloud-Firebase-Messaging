@@ -1,12 +1,16 @@
 package com.example.cloudlab_20180413_20180375_20180341_20180247;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -19,13 +23,19 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.cloudlab_20180413_20180375_20180341_20180247.databinding.ActivityMainBinding;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int PICK_FILE_REQUEST_CODE = 30;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -64,6 +74,47 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(token);
                     }
                 });
+
+    }
+    public void onClickBtn(View view){
+        selectFile();
+    }
+    private void selectFile(){
+        Intent intent=new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent,PICK_FILE_REQUEST_CODE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PICK_FILE_REQUEST_CODE && resultCode==RESULT_OK){
+            Uri filePath = data.getData();
+            uploadFile(filePath);
+        }
+
+    }
+    private void uploadFile(Uri filePath){
+        StorageReference root= FirebaseStorage.getInstance().getReference();
+        final StorageReference fileRef = root.child("images/"+filePath.getLastPathSegment());
+        UploadTask uploadTask = fileRef.putFile(filePath);
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                float pre=snapshot.getBytesTransferred()/(float) snapshot.getTotalByteCount()*100.0f;
+            }
+        });
+
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Log.e("Download Link", task.getResult().toString());
+                    }
+                });
+            }
+        });
     }
 
     @Override
